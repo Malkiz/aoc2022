@@ -20,10 +20,13 @@ for w in fileContent:gmatch("(.-)\n") do
   table.insert(lines, w)
 end
 
-local H = { 0, 0 }
-local T = { 0, 0 }
+local rope = {}
+for i = 1, 10 do
+  rope[i] = { 0, 0 }
+end
 
 local function moveH(dir)
+  local H = rope[1]
   if dir == "R" then
     H[1] = H[1] + 1
   elseif dir == "L" then
@@ -37,12 +40,15 @@ end
 
 local pastT = {}
 local function saveT()
+  local T = rope[#rope]
   local key = T[1] .. "," .. T[2]
   -- print(key)
   pastT[key] = true
 end
 
-local function moveT()
+local function moveT(knot)
+  local H = rope[knot]
+  local T = rope[knot + 1]
   local diffX = H[1] - T[1]
   local diffY = H[2] - T[2]
   if math.abs(diffX) >= 2 or math.abs(diffY) >= 2 then
@@ -62,7 +68,9 @@ for i = 1, #lines do
   local dir, num = lines[i]:match("(.+)%s(%d+)")
   for j = 1, num do
     moveH(dir)
-    moveT()
+    for k = 1, #rope - 1 do
+      moveT(k)
+    end
     saveT()
   end
 end
