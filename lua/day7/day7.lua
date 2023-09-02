@@ -91,12 +91,25 @@ local function dirSize(dirName)
   return size
 end
 
-local sum = 0
-for k, v in pairs(dirs) do
+local dirSizes = {}
+for k in pairs(dirs) do
   local size = dirSize(k)
-  if (size <= 100000) then
-    sum = sum + size
+  dirSizes[k] = size
+end
+
+local totalSize = dirSizes["/"]
+local maxSize = 70000000
+local neededSize = 30000000
+local sizeToFree = neededSize - (maxSize - totalSize)
+
+local smallestKey = nil
+local smallestValue = maxSize
+
+for k, v in pairs(dirSizes) do
+  if v < smallestValue and v > sizeToFree then
+    smallestKey = k
+    smallestValue = v
   end
 end
 
-print(sum)
+print(smallestKey, smallestValue)
