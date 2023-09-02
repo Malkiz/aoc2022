@@ -26,12 +26,15 @@ for w in fileContent:gmatch("(.-)\n") do
   end
 end
 
-local max = elves[1]
-
-for i = 2, #elves do
-  if elves[i] > max then
-    max = elves[i]
-  end
+local function compareDescending(a, b)
+  return a > b
 end
 
-print(max)
+table.sort(elves, compareDescending)
+
+local totalTop3 = 0
+for i = 1, 3 do
+  totalTop3 = totalTop3 + elves[i]
+end
+
+print(totalTop3)
