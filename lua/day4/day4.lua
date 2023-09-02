@@ -16,6 +16,7 @@ if not fileContent then
 end
 
 local count = 0
+local count2 = 0
 for w in fileContent:gmatch("(.-)\n") do
   local a, b = w:match("(.+),(.+)")
   local aStart, aEnd = a:match("(.+)-(.+)")
@@ -25,6 +26,12 @@ for w in fileContent:gmatch("(.-)\n") do
   if aContainsB or bContainsA then
     count = count + 1
   end
+  local overlapA = tonumber(aStart) <= tonumber(bStart) and tonumber(aEnd) >= tonumber(bStart)
+  local overlapB = tonumber(bStart) <= tonumber(aStart) and tonumber(bEnd) >= tonumber(aStart)
+  if overlapA or overlapB then
+    count2 = count2 + 1
+  end
 end
 
 print(count)
+print(count2)
