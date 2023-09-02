@@ -50,3 +50,41 @@ for w in fileContent:gmatch("(.-)\n") do
 end
 
 print(sum)
+
+local lines = {}
+for line in fileContent:gmatch("(.-)\n") do
+  table.insert(lines, line)
+end
+
+sum = 0
+for i = 1, #lines, 3 do
+  local charDict1 = {}
+  local charDict2 = {}
+  local line1 = lines[i]
+  local line2 = lines[i + 1]
+  local line3 = lines[i + 2]
+
+  for j = 1, #line1 do
+    local c = line1:sub(j, j)
+    charDict1[c] = true
+  end
+
+  for j = 1, #line2 do
+    local c = line2:sub(j, j)
+    charDict2[c] = true
+  end
+
+  local sameChar = ""
+  for j = 1, #line3 do
+    local c = line3:sub(j, j)
+    if charDict1[c] and charDict2[c] then
+      sameChar = c
+      break
+    end
+  end
+
+  local codePoint = charToNumber(sameChar)
+  sum = sum + codePoint
+end
+
+print(sum)
