@@ -33,11 +33,13 @@ local function allCharsAreDifferet(str)
   return true
 end
 
+local markerLen = 14
+
 local start
-for i = 1, #line - 4 do
-  local signal = line:sub(i, i + 3)
+for i = 1, #line - markerLen do
+  local signal = line:sub(i, i + markerLen - 1)
   if allCharsAreDifferet(signal) then
-    start = i + 3
+    start = i + markerLen - 1
     break
   end
 end
