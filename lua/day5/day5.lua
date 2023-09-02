@@ -57,9 +57,14 @@ for i = 1, #movesLines do
   local num, from, to = line:match("(%d+).*(%d+).*(%d+)")
   -- print(num, from, to)
   local fromStack = stacks[tonumber(from)]
+  local tmpStack = {}
   local toStack = stacks[tonumber(to)]
   for _ = 1, tonumber(num) do
     local box = table.remove(fromStack)
+    table.insert(tmpStack, box)
+  end
+  for _ = 1, tonumber(num) do
+    local box = table.remove(tmpStack)
     table.insert(toStack, box)
   end
 end
