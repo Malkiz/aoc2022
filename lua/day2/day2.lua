@@ -19,21 +19,24 @@ local moveDict = {
   ["A"] = "Rock",
   ["B"] = "Paper",
   ["C"] = "Scissors",
-  ["X"] = "Rock",
-  ["Y"] = "Paper",
-  ["Z"] = "Scissors",
 }
 
 local outcomeDict = {
-  ["RockRock"] = "Draw",
-  ["RockPaper"] = "Win",
-  ["RockScissors"] = "Lose",
-  ["PaperRock"] = "Lose",
-  ["PaperPaper"] = "Draw",
-  ["PaperScissors"] = "Win",
-  ["ScissorsRock"] = "Win",
-  ["ScissorsPaper"] = "Lose",
-  ["ScissorsScissors"] = "Draw",
+  ["X"] = "Lose",
+  ["Y"] = "Draw",
+  ["Z"] = "Win",
+}
+
+local myMove = {
+  ["RockLose"] = "Scissors",
+  ["RockWin"] = "Paper",
+  ["RockDraw"] = "Rock",
+  ["PaperLose"] = "Rock",
+  ["PaperWin"] = "Scissors",
+  ["PaperDraw"] = "Paper",
+  ["ScissorsLose"] = "Paper",
+  ["ScissorsWin"] = "Rock",
+  ["ScissorsDraw"] = "Scissors",
 }
 
 local scoreDict = {
@@ -47,10 +50,11 @@ local scoreDict = {
 
 local totalScore = 0
 for w in fileContent:gmatch("(.-)\n") do
-  local op, me = w:match("(.+) (.+)")
-  local game = moveDict[op] .. moveDict[me]
-  local outcome = outcomeDict[game]
-  local score = scoreDict[outcome] + scoreDict[moveDict[me]]
+  local op, outcome = w:match("(.+) (.+)")
+  local opMove = moveDict[op]
+  local outcomeValue = outcomeDict[outcome]
+  local move = myMove[opMove .. outcomeValue]
+  local score = scoreDict[move] + scoreDict[outcomeValue]
   totalScore = totalScore + score
 end
 
