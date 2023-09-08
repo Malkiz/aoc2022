@@ -67,6 +67,23 @@ local function doOp()
 end
 
 local sum = 0
+local screen = {}
+
+for i = 1, 6 do
+  screen[i] = {}
+end
+
+local function drawCRT()
+  local col = (cycle - 1) % 40 + 1
+  local row = math.floor((cycle - 1) / 40) + 1
+  local pixel
+  if math.abs(x - col + 1) <= 1 then
+    pixel = '#'
+  else
+    pixel = '.'
+  end
+  screen[row][col] = pixel
+end
 
 local function doCycle()
   getOp()
@@ -77,6 +94,7 @@ local function doCycle()
   if isSpecialCycle() then
     sum = sum + (x * cycle)
   end
+  drawCRT()
   doOp()
   return true
 end
@@ -84,4 +102,15 @@ end
 while doCycle() do
 end
 
+local function tableToString(t)
+  local s = ""
+  for i = 1, #t do
+    s = s .. t[i]
+  end
+  return s
+end
+
 print(sum)
+for i = 1, #screen do
+  print(tableToString(screen[i]))
+end
