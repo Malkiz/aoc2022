@@ -47,6 +47,12 @@ for i = 1, #lines, 7 do
   }
 end
 
+local mod = 1
+for i = 0, #monkeys do
+  local monkey = monkeys[i]
+  mod = mod * monkey.test
+end
+
 local function getVal(symbol, worry)
   if symbol == "old" then
     return worry
@@ -70,17 +76,16 @@ local function doTest(worry, test)
   return worry % test == 0
 end
 
-for i = 1, 20 do
+for i = 1, 10000 do
   for j = 0, #monkeys do
     local monkey = monkeys[j]
     local items = monkey.startingItems
     for k = 1, #items do
       monkey.inspect = monkey.inspect + 1
-      local worry = math.floor(doOp(items[k], monkey.operation) / 3)
+      local worry = math.floor(doOp(items[k], monkey.operation)) % mod
       if (doTest(worry, monkey.test)) then
         table.insert(monkeys[monkey.ifTrue].startingItems, worry)
       else
-        local otherMonkey = monkeys[monkey.ifFalse]
         table.insert(monkeys[monkey.ifFalse].startingItems, worry)
       end
     end
@@ -103,6 +108,12 @@ local function getTop2Monkeys()
   return top1, top2
 end
 
+for i = 0, #monkeys do
+  local monkey = monkeys[i]
+  -- print(i, monkey.inspect, #monkey.startingItems)
+end
+
 local top1, top2 = getTop2Monkeys()
 local result = top1 * top2
+print(top1, top2)
 print(result)
