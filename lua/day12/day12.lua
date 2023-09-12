@@ -82,6 +82,12 @@ local function findPath(step, position)
   end
 end
 
-findPath(0, S)
+for i = 1, #grid do
+  for j = 1, #grid[i] do
+    if grid[i][j] == 1 then
+      findPath(0, { i, j })
+    end
+  end
+end
 
 print(visited[E[1]][E[2]])
