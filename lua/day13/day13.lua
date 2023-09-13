@@ -130,3 +130,32 @@ for i = 1, #pairs do
 end
 
 print(sum)
+
+local packets = {}
+for i = 1, #pairs do
+  table.insert(packets, pairs[i][1])
+  table.insert(packets, pairs[i][2])
+end
+
+local divider1 = { { 2 } }
+local divider2 = { { 6 } }
+
+table.insert(packets, divider1)
+table.insert(packets, divider2)
+
+table.sort(packets, function(left, right)
+  return compare(left, right) == 1
+end)
+
+local divider1Index = 0
+local divider2Index = 0
+for index, packet in ipairs(packets) do
+  if packet == divider1 then
+    divider1Index = index
+  elseif packet == divider2 then
+    divider2Index = index
+  end
+end
+
+local key = divider1Index * divider2Index
+print(key)
