@@ -44,6 +44,10 @@ end
 
 -- print(minX, maxX, minY, maxY)
 
+local infinity = 10000
+minX = minX - infinity
+maxX = maxX + infinity
+maxY = maxY + 2
 local grid = {}
 
 for y = minY, maxY do
@@ -51,6 +55,10 @@ for y = minY, maxY do
   for x = minX, maxX do
     grid[y][x] = '.'
   end
+end
+
+for x = minX, maxX do
+  grid[maxY][x] = '#'
 end
 
 for i, rock in pairs(rocks) do
@@ -85,7 +93,7 @@ local function printGrid()
   end
 end
 
-printGrid()
+-- printGrid()
 
 local function isInGrid(sand)
   return sand[1] >= minX and sand[1] <= maxX and sand[2] >= minY and sand[2] <= maxY
@@ -108,7 +116,7 @@ local function moveSand(sand)
 end
 
 local function addSand()
-  local sand = { source[1], source[2] + 1 }
+  local sand = { source[1], source[2] }
   local newSand
   while isInGrid(sand) do
     newSand = moveSand(sand)
@@ -117,7 +125,7 @@ local function addSand()
     end
     sand = newSand
   end
-  if isInGrid(newSand) and grid[newSand[2]][newSand[1]] == '.' then
+  if isInGrid(newSand) and grid[newSand[2]][newSand[1]] ~= '+' then
     grid[newSand[2]][newSand[1]] = 'o'
     return true
   else
@@ -128,6 +136,8 @@ end
 local count = 0
 while addSand() do
   count = count + 1
-  printGrid()
-  print(count)
+  -- printGrid()
+  -- print(count)
 end
+--printGrid()
+print(count + 1)
