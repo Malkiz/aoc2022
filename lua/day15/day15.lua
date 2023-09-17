@@ -34,60 +34,63 @@ for i, line in pairs(lines) do
   table.insert(data, d)
 end
 
-local minX, maxX, minY, maxY = data[1].sensor[1], data[1].sensor[1], data[1].sensor[2], data[1].sensor[2]
-
-for i, d in pairs(data) do
-  if d.sensor[1] < minX then minX = d.sensor[1] end
-  if d.sensor[1] > maxX then maxX = d.sensor[1] end
-  if d.sensor[2] < minY then minY = d.sensor[2] end
-  if d.sensor[2] > maxY then maxY = d.sensor[2] end
-  if d.beacon[1] < minX then minX = d.beacon[1] end
-  if d.beacon[1] > maxX then maxX = d.beacon[1] end
-  if d.beacon[2] < minY then minY = d.beacon[2] end
-  if d.beacon[2] > maxY then maxY = d.beacon[2] end
-end
-
-local offset = 1000000
-minX = minX - offset
-maxX = maxX + offset
-minY = minY - offset
-maxY = maxY + offset
-
--- print(minX, maxX, minY, maxY)
-
-local y = 2000000
-local countNo = 0
+-- local y = 10
+-- local countNo = 0
 -- local str = ''
 
-for x = minX, maxX do
-  local closer = false
-  local beacon = false
-  local sensor = false
-  for i, d in pairs(data) do
-    if d.sensor[1] == x and d.sensor[2] == y then
-      sensor = true
-      break
+local signalMin = 0
+local signalMax = 4000000
+
+local function findEmpty()
+  for y = signalMin, signalMax do
+    -- print(y)
+    local x = signalMin
+    while x <= signalMax do
+      -- print(y, x)
+      local closer = false
+      local beacon = false
+      local sensor = false
+      for i, d in pairs(data) do
+        if d.sensor[1] == x and d.sensor[2] == y then
+          sensor = true
+          break
+        end
+        if d.beacon[1] == x and d.beacon[2] == y then
+          beacon = true
+          break
+        end
+        if d.distance >= manhattanDistance({ x, y }, d.sensor) then
+          closer = true
+          local diffY = math.abs(y - d.sensor[2])
+          local remainder = d.distance - diffY
+          local diffX = x - d.sensor[1]
+          local moveX = remainder - diffX
+          if moveX > 0 then
+            x = x + moveX
+          end
+          break
+        end
+      end
+      if sensor then
+        -- str = str .. 'S'
+      elseif beacon then
+        -- str = str .. 'B'
+      elseif closer then
+        -- str = str .. '#'
+        -- countNo = countNo + 1
+      else
+        -- str = str .. '.'
+        return { x, y }
+      end
+      x = x + 1
     end
-    if d.beacon[1] == x and d.beacon[2] == y then
-      beacon = true
-      break
-    end
-    if d.distance >= manhattanDistance({ x, y }, d.sensor) then
-      closer = true
-      break
-    end
-  end
-  if sensor then
-    -- str = str .. 'S'
-  elseif beacon then
-    -- str = str .. 'B'
-  elseif closer then
-    -- str = str .. '#'
-    countNo = countNo + 1
-  else
-    -- str = str .. '.'
   end
 end
 
+local empty = findEmpty()
+
 -- print(str)
-print(countNo)
+print(empty[1], empty[2])
+
+local freq = empty[1] * 4000000 + empty[2]
+print(freq)
